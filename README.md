@@ -139,7 +139,8 @@ Visible on Public Event Page
 
 ## 📸 Screenshots
 
-> *Coming soon — add your app screenshots here*
+> <img width="833" height="489" alt="image" src="https://github.com/user-attachments/assets/72942e91-11f5-4224-bfd2-75d2070640d5" />
+
 
 ---
 
