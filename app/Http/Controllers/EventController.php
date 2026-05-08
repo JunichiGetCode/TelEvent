@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Storage;
 
 class EventController extends Controller
 {
-    // Menampilkan dashboard user (5 event terbaru milik user)
     public function dashboard()
     {
         $events = Event::where('user_id', auth()->id()) 
@@ -19,14 +18,8 @@ class EventController extends Controller
         return view('dashboard', compact('events'));
     }
 
-    // ------------------------------------------------------------------
-    // PERUBAHAN 1: Halaman Index (Semua Event)
-    // Hanya menampilkan event yang sudah DISETUJUI (APPROVED) admin
-    // ------------------------------------------------------------------
-   // Menampilkan semua event (HANYA YANG APPROVED)
     public function index()
     {
-        // HAPUS 'withCount(...)' karena kita tidak punya model Timeline/Budget
         $events = Event::where('status', 'approved')
                        ->latest()
                        ->paginate(10);
@@ -34,16 +27,11 @@ class EventController extends Controller
         return view('events.index', compact('events'));
     }
 
-    // Menampilkan form buat event
     public function create()
     {
         return view('events.create');
     }
 
-    // ------------------------------------------------------------------
-    // PERUBAHAN 2: Proses Simpan Event
-    // Redirect ke Profile User setelah simpan agar bisa cek status
-    // ------------------------------------------------------------------
     public function store(Request $r)
     {
         $data = $r->validate([
@@ -60,7 +48,6 @@ class EventController extends Controller
 
         $data['user_id'] = auth()->id();
 
-        // Upload File
         $data['proposal']  = $r->file('proposal')->store('proposals', 'public');
         $data['timeline']  = $r->file('timeline')->store('timelines', 'public');
         $data['budgeting'] = $r->file('budgeting')->store('budgeting', 'public');
@@ -73,28 +60,23 @@ class EventController extends Controller
             $data['other_data'] = $r->file('other_data')->store('other_data', 'public');
         }
 
-        // Set status awal jadi PENDING
         $data['status'] = 'pending';
         Event::create($data);
 
-        // Redirect ke PROFILE USER dengan pesan sukses
         return redirect()->route('profile.show')
                          ->with('success', 'Event berhasil diajukan! Status saat ini: Menunggu Review Admin.');
     }
 
-    // Menampilkan detail event
     public function show(Event $event)
     {
         return view('events.show', compact('event'));
     }
 
-    // Edit event
     public function edit(Event $event)
     {
         return view('events.edit', compact('event'));
     }
 
-    // Update event
     public function update(Request $r, Event $event)
     {
         $data = $r->validate([
@@ -109,7 +91,6 @@ class EventController extends Controller
             'other_data' => 'nullable|file|mimes:pdf,doc,docx',
         ]);
 
-        // Logic update file
         if ($r->hasFile('proposal')) {
             if ($event->proposal) Storage::delete('public/proposals/' . $event->proposal);
             $data['proposal'] = $r->file('proposal')->store('proposals', 'public');
@@ -135,15 +116,11 @@ class EventController extends Controller
             $data['other_data'] = $r->file('other_data')->store('other_data', 'public');
         }
         
-        // Jika user mengupdate event, status bisa dikembalikan ke pending atau tetap (opsional)
-        // Di sini kita biarkan statusnya tetap seperti sebelumnya
         $event->update($data);
 
-        // Redirect ke Profile atau Index
         return redirect()->route('profile.show')->with('success', 'Event berhasil diperbarui.');
     }
 
-    // Hapus event
     public function destroy(Event $event)
     {
         if ($event->proposal) Storage::delete('public/proposals/' . $event->proposal);
@@ -175,15 +152,11 @@ class EventController extends Controller
         return view('events.files', compact('event', 'documents'));
     }
 
-    // ------------------------------------------------------------------
-    // PERUBAHAN 3: Pencarian
-    // Hanya mencari event yang APPROVED
-    // ------------------------------------------------------------------
     public function search(Request $request)
     {
         $keyword = $request->input('q');
 
-        $events = Event::where('status', 'approved') // Filter Approved
+        $events = Event::where('status', 'approved')
             ->when($keyword, function ($query) use ($keyword) {
                 $query->where('title', 'like', "%{$keyword}%");
             })
@@ -193,7 +166,6 @@ class EventController extends Controller
         return view('events.index', compact('events', 'keyword'));
     }
 
-    // Update status oleh Admin
     public function updateStatus($eventId, $status)
     {
         $event = Event::findOrFail($eventId);

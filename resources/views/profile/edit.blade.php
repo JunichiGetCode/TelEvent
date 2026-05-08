@@ -1,190 +1,175 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Profile')
+@section('title', 'Pengaturan Profil')
 
-@section('styles')
+@push('styles')
+<style>
+    :root {
+        --telu-red: #C60C30;
+        --telu-red-dark: #A00926;
+        --bg-soft: #F8F9FA;
+    }
 
+    body {
+        background-color: var(--bg-soft);
+    }
 
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us</title>
+    .settings-container {
+        max-width: 800px;
+        margin: 40px auto;
+        background: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+    }
 
+    .settings-header {
+        background: linear-gradient(135deg, var(--telu-red), var(--telu-red-dark));
+        color: white;
+        padding: 40px;
+        text-align: center;
+        position: relative;
+    }
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .about-section {
-            background: #F4D7DD;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-        }
+    .settings-header h2 {
+        font-weight: 800;
+        margin: 0;
+        letter-spacing: 0.5px;
+    }
 
-        .about-title {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #D2042D;
-        }
+    .settings-header p {
+        opacity: 0.9;
+        margin-top: 5px;
+        margin-bottom: 0;
+    }
 
-        .about-content {
-            font-size: 1.2rem;
-            color: #6B6B6B;
-            line-height: 2.5;
-        }
+    .settings-body {
+        padding: 40px;
+    }
 
-        .navbar {
-            background: linear-gradient(90deg, #D2042D, #A8092D);
-            padding: 1rem;
-        }
+    .avatar-wrapper {
+        text-align: center;
+        margin-top: -80px;
+        margin-bottom: 30px;
+        position: relative;
+        z-index: 10;
+    }
 
-        .navbar .navbar-brand {
-            color: #fff !important;
-            font-weight: 800;
-            font-size: 1rem;
-        }
+    .avatar-preview {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        border: 4px solid #ffffff;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        object-fit: cover;
+        background: #fff;
+    }
 
-        .navbar .nav-link {
-            color: #fff !important;
-            font-weight: 500;
-        }
+    .form-label {
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 8px;
+    }
 
-        .logout-btn {
-            background-color: #ffffff;
-            color: #D2042D;
-            border-radius: 50px;
-            border: 2px solid #D2042D;
-            padding: 8px 24px;
-            font-weight: bold;
-        }
+    .required-label::after {
+        content: " *";
+        color: var(--telu-red);
+    }
 
-        .logout-btn:hover {
-            background-color: #D2042D;
-            color: white;
-        }
+    .form-control {
+        border: 2px solid #E5E7EB;
+        border-radius: 10px;
+        padding: 12px 15px;
+        transition: 0.3s;
+        font-size: 15px;
+    }
 
-        .page-shell {
-            max-width: 1180px;
-            margin: 2rem auto;
-            background: white;
-            padding: 3rem;
-            border-radius: 30px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
+    .form-control:focus {
+        border-color: var(--telu-red);
+        box-shadow: 0 0 0 4px rgba(198, 12, 48, 0.1);
+        outline: none;
+    }
 
-        .hero-section {
-            text-align: left;
-            border-bottom: 1px solid #f0dce0;
-            padding-bottom: 2rem;
-            margin-bottom: 3rem;
-        }
+    .btn-save {
+        background: var(--telu-red);
+        color: white;
+        font-weight: 600;
+        border-radius: 50px;
+        padding: 14px 40px;
+        border: none;
+        transition: 0.3s;
+        font-size: 16px;
+        width: 100%;
+        margin-top: 20px;
+    }
 
-        .hero-title {
-            font-size: 2.4rem;
-            font-weight: 800;
-            color: var(--red-dark);
-        }
+    .btn-save:hover {
+        background: var(--telu-red-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(198, 12, 48, 0.2);
+    }
+</style>
+@endpush
 
-        .hero-subtitle {
-            color: var(--text-soft);
-            max-width: 420px;
-            margin: 0 0 1.5rem 0;
-            text-align: left;
-            width: 100%;
-        }
-
-        .btn-event {
-            background-color: #D2042D;
-            color: white;
-            border-radius: 50px;
-            padding: 12px 32px;
-            font-weight: bold;
-            border: 2px solid white;
-            transition: 0.3s;
-        }
-
-        .btn-event:hover {
-            background: white;
-            color: #D2042D;
-            border: 2px solid #D2042D;
-        }
-
-        .required-label::after {
-            content: " *";
-            color: red;
-            font-weight: bold;
-        }
-
+@section('content')
+<div class="container">
+    <div class="settings-container">
+        <div class="settings-header">
+            <h2>Pengaturan Profil</h2>
+            <p>Perbarui informasi profil Anda di sini.</p>
+        </div>
         
-        
-    </style>
-</head>
-<body>
+        <div class="settings-body">
+            @if ($errors->any())
+                <div class="alert alert-danger rounded-3 border-0 shadow-sm mb-4">
+                    <div class="fw-bold mb-2"><i class="fa-solid fa-triangle-exclamation me-2"></i> Terdapat kesalahan:</div>
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
-    {{-- NAVBAR --}}
-<div class="navbar navbar-light bg-light">
-    <div class="container d-flex justify-content-between align-items-center">
-        <a class="navbar-brand" href="{{ route('user.home') }}">TelUVent</a>
-
-        <div class="d-flex gap-3 align-items-center">
-            <a href="{{ route('user.home') }}" class="nav-link">Beranda</a>
-            <a href="{{ route('events.index') }}" class="nav-link">Semua Acara</a>
-            <a href="{{ route('about') }}" class="nav-link">About</a>
-            <a href="{{ route('profile.show') }}" class="nav-link">Profile</a>
-
-            <span class="text-white fw-semibold">
-                Halo, {{ Auth::user()->name }} 👋
-            </span>
-
-            <form action="{{ route('logout') }}" method="POST">
+            <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
                 @csrf
-                <button class="logout-btn">Keluar</button>
+
+                <div class="avatar-wrapper">
+                    @if(Auth::user()->avatar)
+                        <img src="{{ asset('storage/profile/' . Auth::user()->avatar) }}" alt="User Avatar" class="avatar-preview">
+                    @else
+                        <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=C60C30&color=fff" alt="Avatar" class="avatar-preview">
+                    @endif
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-12">
+                        <label class="form-label text-dark">Ubah Foto Profil</label>
+                        <input type="file" name="avatar" class="form-control" accept=".jpg,.jpeg,.png">
+                        <small class="text-muted mt-1 d-block">Maksimal ukuran file 2MB (.jpg, .jpeg, .png)</small>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label required-label">Nama Lengkap</label>
+                        <input type="text" name="name" class="form-control" placeholder="Masukkan nama Anda" value="{{ old('name', Auth::user()->name) }}" required>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label class="form-label required-label">Email</label>
+                        <input type="email" name="email" class="form-control" placeholder="Masukkan email Anda" value="{{ old('email', Auth::user()->email) }}" required>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label class="form-label">No. Telepon</label>
+                        <input type="text" name="phone" class="form-control" placeholder="Masukkan nomor telepon" value="{{ old('phone', Auth::user()->phone) }}">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-save">
+                    <i class="fa-solid fa-floppy-disk me-2"></i> Simpan Perubahan
+                </button>
             </form>
         </div>
     </div>
-</div>
-
-@section('content')
-<div class="container" style="padding-top: 40px;">
-    <h1 class="text-center mb-4" style="color: #D2042D; font-weight: 800;">
-        Edit Profil
-    </h1>
-
-    <form action="{{ route('events.store') }}" method="POST" enctype="multipart/form-data">
-        @csrf
-    <div class="container d-flex justify-content-center align-items-center min-vh-50">
-        
-            <!-- LEFT -->
-                <div class="form-section bg-secondary-subtle p-4 rounded-3 shadow-sm">
-
-                    <div class="mb-3">
-                        <label class="form-label text-dark required-label">Foto Profil</label>
-                        <input type="file" name="avatar" class="form-control" >
-                    </div>
-
-
-                    <div class="mb-3">
-                        <label class="form-label text-dark required-label">Nama</label>
-                        <input type="text" name="name" class="form-control" placeholder="Masukkan nama-mu" >
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label text-dark required-label">Email</label>
-                        <input type="text" name="email" class="form-control" placeholder="Masukkan email-mu" >
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label text-dark required-label">No. Telepon</label>
-                        <input type="text" name="phone" class="form-control" placeholder="Masukkan no. telepon-mu" >
-                    </div>
-                </div>
-            </div>
-
-        <div class="text-center mt-4">
-            <button class="btn btn-danger px-5 py-2">Simpan Event</button>
-        </div>
-
-    </form>
 </div>
 @endsection

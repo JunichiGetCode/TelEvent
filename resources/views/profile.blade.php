@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TelUVent – Dashboard User</title>
+    <title>TelUVent â€“ Dashboard User</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         :root {
@@ -51,7 +51,7 @@
     </style>
 </head>
 <body>
-    <!-- NAVBAR -->
+    
     <div class="nav-shell">
         <div class="container d-flex justify-content-between align-items-center">
             <a class="navbar-brand" href="{{ route('user.home') }}">TelUVent</a>
@@ -60,7 +60,7 @@
                 <a href="{{ route('events.index') }}" class="nav-link">Semua Acara</a>
                 <a href="{{ route('about') }}" class="nav-link">About</a>
                 <a href="{{ route('profile.show') }}" class="nav-link">Profile</a>
-                <span class="text-white fw-semibold">Halo, {{ Auth::user()->name }} 👋</span>
+                <span class="text-white fw-semibold">Halo, {{ Auth::user()->name }} ðŸ‘‹</span>
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
                     <button class="logout-btn">Keluar</button>
@@ -69,11 +69,11 @@
         </div>
     </div>
     
-    <!-- PROFILE PAGE -->
+    
     <div class="container mt-5">
         <div class="row">
             <div class="col-md-4">
-                <!-- Profile Image and Basic Info -->
+                
                 <div class="card shadow-sm" style="border-radius: 15px;">
                     <img src="{{ asset('storage/profile/' . Auth::user()->avatar) }}" class="card-img-top" alt="User Image">
                     <div class="card-body text-center">
@@ -86,7 +86,7 @@
             </div>
 
             <div class="col-md-8">
-                <!-- Event Information -->
+                
                 <div class="card shadow-sm mb-4" style="border-radius: 15px;">
                     <div class="card-body">
                         <h4 class="card-title">Acara-mu</h4>
@@ -119,7 +119,7 @@
                     </div>
                 </div>
 
-                <!-- Event List -->
+                
                 <h4>Upcoming Appointments</h4>
                 <table class="table table-bordered">
                     <thead>
@@ -167,7 +167,7 @@
         </div>
     </div>
 
-    <!-- Include Bootstrap JS (optional for dropdown, modals, etc.) -->
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

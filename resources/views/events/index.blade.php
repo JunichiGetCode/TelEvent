@@ -1,170 +1,173 @@
 @extends('layouts.app')
 
+@section('title', 'Semua Acara - TelEVent')
+
+@push('styles')
+<style>
+    :root { --telu-red: #C60C30; }
+
+    .page-hero {
+        background: linear-gradient(135deg, var(--telu-red) 0%, #A00926 60%, #1A1A2E 100%);
+        padding: 70px 0;
+        color: white;
+        border-radius: 0 0 40px 40px;
+        margin-top: -24px;
+        margin-bottom: 50px;
+        text-align: center;
+        box-shadow: 0 10px 40px rgba(198,12,48,0.25);
+        position: relative;
+        overflow: hidden;
+    }
+    .page-hero::before { content: ''; position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%); top: -200px; right: -200px; border-radius: 50%; }
+    .page-hero h1 { font-size: 2.8rem; font-weight: 900; margin-bottom: 12px; }
+    .page-hero p { opacity: 0.9; font-size: 1.1rem; }
+
+    .filter-bar {
+        background: #fff;
+        border-radius: 20px;
+        padding: 24px 28px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+        margin-bottom: 40px;
+        border: 1px solid #F1F5F9;
+    }
+    .form-label { font-weight: 600; color: #374151; font-size: 0.85rem; margin-bottom: 8px; }
+    .form-select, .form-control { border: 2px solid #E5E7EB; border-radius: 12px; padding: 11px 16px; transition: 0.3s; font-size: 0.95rem; }
+    .form-select:focus, .form-control:focus { border-color: var(--telu-red); box-shadow: 0 0 0 4px rgba(198,12,48,0.1); }
+
+    .events-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
+
+    .event-card {
+        background: #fff; border-radius: 20px; overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+        transition: 0.4s;
+        display: flex; flex-direction: column;
+        border: 1px solid #F1F5F9;
+    }
+    .event-card:hover { transform: translateY(-10px); box-shadow: 0 20px 60px rgba(0,0,0,0.1); }
+
+    .event-img-wrap { height: 220px; position: relative; overflow: hidden; }
+    .event-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+    .event-card:hover .event-img-wrap img { transform: scale(1.08); }
+    .event-img-placeholder { width: 100%; height: 100%; background: linear-gradient(135deg, #F1F5F9, #E2E8F0); display: flex; flex-direction: column; align-items: center; justify-content: center; color: #94A3B8; }
+
+    .event-badge {
+        position: absolute; top: 14px; left: 14px;
+        background: rgba(198,12,48,0.95); backdrop-filter: blur(10px);
+        color: #fff; border-radius: 50px; padding: 5px 14px;
+        font-size: 0.75rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
+    }
+
+    .event-body { padding: 22px; flex-grow: 1; display: flex; flex-direction: column; }
+    .event-name { font-size: 1.1rem; font-weight: 700; color: #1A1A2E; margin-bottom: 10px; line-height: 1.4; }
+    .event-date { font-size: 0.875rem; color: #64748B; display: flex; align-items: center; gap: 8px; margin-bottom: auto; }
+
+    .empty-state { grid-column: 1/-1; text-align: center; padding: 80px 20px; background: #fff; border-radius: 20px; border: 2px dashed #E2E8F0; }
+    .empty-state i { font-size: 3.5rem; color: #CBD5E1; margin-bottom: 20px; }
+    .results-info { font-size: 0.9rem; color: #64748B; margin-bottom: 20px; }
+</style>
+@endpush
+
 @section('content')
+<div class="page-hero">
+    <div class="container position-relative" style="z-index:1;">
+        <h1><i class="fa-solid fa-calendar-days me-3"></i>Semua Acara</h1>
+        <p>Temukan dan ikuti berbagai acara menarik di Telkom University</p>
+    </div>
+</div>
 
-    {{-- Link External --}}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
-    {{-- CSS Khusus Halaman Ini --}}
-    <style>
-        /* Container */
-        .container-custom { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+<div class="container mb-5">
 
-        /* Filter & Search */
-        .controls { display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 30px; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .control-group { display: flex; align-items: center; }
-        .control-group label { margin-right: 10px; font-weight: bold; }
-        .control-group select, .control-group input { padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 1rem; }
-        .control-group input { width: 300px; }
+    @if(session('success'))
+    <div class="alert border-0 rounded-3 py-3 mb-4 d-flex align-items-center" style="background: rgba(16,185,129,0.1); color: #065F46;">
+        <i class="fa-solid fa-circle-check fs-5 me-2"></i> {{ session('success') }}
+    </div>
+    @endif
 
-        /* Event List Grid */
-        .event-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
-        
-        /* Kartu Event */
-        .event {
-            background-color: #fff; border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            overflow: hidden; transition: transform 0.3s ease;
-            display: flex; flex-direction: column;
-        }
-        .event:hover { transform: translateY(-5px); }
-
-        /* Gambar Poster */
-        .event-image-wrapper {
-            height: 200px; background-color: #eee; overflow: hidden; position: relative;
-        }
-        .event-image-wrapper img {
-            width: 100%; height: 100%; object-fit: cover;
-        }
-
-        /* Detail Event */
-        .event-details { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
-        .event-category { font-size: 0.8rem; color: #D2042D; font-weight: bold; text-transform: uppercase; margin-bottom: 5px; }
-        .event-name { font-size: 1.25rem; font-weight: bold; margin-bottom: 10px; color: #222; line-height: 1.3; }
-        .event-date { font-size: 0.95rem; color: #666; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
-
-        /* Tombol Admin (Hapus) */
-        .admin-actions { margin-top: auto; border-top: 1px solid #f0f0f0; padding-top: 15px; display: flex; justify-content: flex-end; }
-        .btn-delete { background-color: #ffe6e6; color: #D2042D; border: 1px solid #D2042D; padding: 6px 12px; border-radius: 5px; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 5px; }
-        .btn-delete:hover { background-color: #D2042D; color: white; }
-    </style>
-
-    {{-- KONTEN UTAMA --}}
-    <div class="container-custom">
-        
-        {{-- Pesan Sukses --}}
-        @if(session('success'))
-        <div style="background:#d4edda; color:#155724; padding:15px; margin-bottom:20px; border-radius:5px;">
-            <i class="fas fa-check-circle"></i> {{ session('success') }}
-        </div>
-        @endif
-
-        {{-- Filter & Search --}}
-        <div class="controls">
-            <div class="control-group">
-                <label for="category">Kategori:</label>
-                <select id="category">
-                    <option value="all">Semua</option>
-                    <option value="Exhibition">Exhibition</option>
-                    <option value="Festival">Festival</option>
-                    <option value="Lomba">Lomba</option>
-                    <option value="Seminar">Seminar</option>
-                    <option value="Webinar">Webinar</option>
+    <!-- FILTER BAR -->
+    <div class="filter-bar">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label">Kategori Acara</label>
+                <select id="category" class="form-select">
+                    <option value="all">🎯 Semua Kategori</option>
+                    <option value="Exhibition">🏛 Exhibition</option>
+                    <option value="Festival">🎪 Festival</option>
+                    <option value="Lomba">🏆 Lomba</option>
+                    <option value="Seminar">📚 Seminar</option>
+                    <option value="Webinar">💻 Webinar</option>
                 </select>
             </div>
-            <div class="control-group">
-                <input type="text" id="search" placeholder="Cari nama acara...">
+            <div class="col-md-8">
+                <label class="form-label">Cari Acara</label>
+                <div class="position-relative">
+                    <i class="fa-solid fa-magnifying-glass position-absolute text-muted" style="left:15px; top:50%; transform:translateY(-50%); pointer-events:none;"></i>
+                    <input type="text" id="search" class="form-control" style="padding-left:45px;" placeholder="Ketik nama acara...">
+                </div>
             </div>
-        </div>
-
-        {{-- Grid Event --}}
-        <div class="event-list">
-            @forelse($events as $event)
-                <div class="event" data-category="{{ $event->type }}">
-                    
-                    <div class="event-image-wrapper">
-                        @if($event->poster)
-                            <img src="{{ asset('storage/' . $event->poster) }}" alt="Poster {{ $event->title }}">
-                        @else
-                            <img src="https://via.placeholder.com/400x300?text=No+Poster" alt="No Image">
-                        @endif
-                    </div>
-
-                    <div class="event-details">
-                        <div class="event-category">{{ $event->type }}</div>
-                        <h3 class="event-name">{{ $event->title }}</h3>
-                        
-                        <p class="event-date">
-                            <i class="far fa-calendar-alt"></i> 
-                            {{ \Carbon\Carbon::parse($event->start_date)->format('d F Y') }}
-                        </p>
-
-                        @if(auth()->check() && auth()->user()->role == 'admin')
-                        <div class="admin-actions">
-                            <form action="{{ route('events.destroy', $event->id) }}" method="POST" class="form-delete-{{ $event->id }}">
-                                @csrf
-                                @method('DELETE')
-                                
-                                <button type="button" class="btn-delete" onclick="confirmDelete({{ $event->id }})">
-                                    <i class="fas fa-trash-alt"></i> Hapus
-                                </button>
-                            </form>
-                        </div>
-                        @endif
-                    </div>
-                </div>
-            @empty
-                <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #888;">
-                    <i class="fas fa-folder-open fa-3x mb-3"></i>
-                    <h3>Belum ada acara yang tersedia.</h3>
-                </div>
-            @endforelse
-        </div>
-
-        {{-- Pagination --}}
-        <div style="margin-top: 40px; display: flex; justify-content: center;">
-            {{ $events->links() }} 
         </div>
     </div>
 
-    {{-- SCRIPT JAVASCRIPT --}}
-    <script>
-        // 1. Script Filter Kategori
-        document.getElementById('category').addEventListener('change', function() {
-            let selected = this.value;
-            document.querySelectorAll('.event').forEach(el => {
-                el.style.display = (selected === 'all' || el.dataset.category === selected) ? 'flex' : 'none';
-            });
-        });
+    @if(isset($keyword) && $keyword)
+        <p class="results-info">Hasil pencarian untuk: <strong>"{{ $keyword }}"</strong></p>
+    @endif
 
-        // 2. Script Search
-        document.getElementById('search').addEventListener('input', function() {
-            let term = this.value.toLowerCase();
-            document.querySelectorAll('.event').forEach(el => {
-                let title = el.querySelector('.event-name').textContent.toLowerCase();
-                el.style.display = title.includes(term) ? 'flex' : 'none';
-            });
-        });
+    <div class="events-grid" id="eventsGrid">
+        @forelse($events as $event)
+            <div class="event-card" data-category="{{ $event->type }}">
+                <div class="event-img-wrap">
+                    <span class="event-badge">{{ $event->type }}</span>
+                    @if($event->poster)
+                        <img src="{{ asset('storage/' . $event->poster) }}" alt="{{ $event->title }}">
+                    @else
+                        <div class="event-img-placeholder">
+                            <i class="fa-solid fa-image fa-2x mb-2"></i>
+                            <span style="font-size:0.8rem;">Tidak Ada Poster</span>
+                        </div>
+                    @endif
+                </div>
+                <div class="event-body">
+                    <h3 class="event-name">{{ $event->title }}</h3>
+                    <div class="event-date">
+                        <i class="fa-regular fa-calendar text-danger"></i>
+                        {{ \Carbon\Carbon::parse($event->start_date)->format('d F Y') }}
+                    </div>
+                </div>
+            </div>
+        @empty
+            <div class="empty-state">
+                <i class="fa-solid fa-folder-open d-block"></i>
+                <h4 style="font-weight:700; color:#94A3B8;">Belum Ada Acara</h4>
+                <p style="color:#CBD5E1;">Belum ada acara yang tersedia saat ini. Silakan kembali lagi nanti.</p>
+            </div>
+        @endforelse
+    </div>
 
-        // 3. Script SweetAlert Konfirmasi Hapus
-        function confirmDelete(eventId) {
-            Swal.fire({
-                title: 'Hapus Event ini?',
-                text: "Event yang dihapus tidak dapat dikembalikan!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#D2042D', // Merah sesuai tema
-                cancelButtonColor: '#6c757d',
-                confirmButtonText: 'Ya, Hapus!',
-                cancelButtonText: 'Batal',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Cari form berdasarkan ID dan submit
-                    document.querySelector(`.form-delete-${eventId}`).submit();
-                }
-            });
-        }
-    </script>
+    @if(method_exists($events, 'links'))
+    <div class="mt-5 d-flex justify-content-center">
+        {{ $events->links() }}
+    </div>
+    @endif
+
+</div>
 @endsection
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    const categoryFilter = document.getElementById('category');
+    const searchInput = document.getElementById('search');
+
+    function filterEvents() {
+        const cat = categoryFilter.value;
+        const term = searchInput.value.toLowerCase();
+        document.querySelectorAll('.event-card').forEach(el => {
+            const matchCat = cat === 'all' || el.dataset.category === cat;
+            const matchSearch = el.querySelector('.event-name').textContent.toLowerCase().includes(term);
+            el.style.display = (matchCat && matchSearch) ? 'flex' : 'none';
+        });
+    }
+
+    categoryFilter.addEventListener('change', filterEvents);
+    searchInput.addEventListener('input', filterEvents);
+</script>
+@endpush
