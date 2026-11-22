@@ -4,7 +4,12 @@
  */
 export function normalizeFilePath(filePath?: string | null): string | null {
   if (!filePath) return null;
-  if (filePath.startsWith('http://') || filePath.startsWith('https://') || filePath.startsWith('/')) {
+  if (
+    filePath.startsWith('http://') ||
+    filePath.startsWith('https://') ||
+    filePath.startsWith('/') ||
+    filePath.startsWith('data:')
+  ) {
     return filePath;
   }
   return `/storage/${filePath}`;
