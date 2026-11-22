@@ -86,7 +86,7 @@ export default async function UserHomePage() {
               </span>
             </div>
             <h1 className="text-3xl font-black text-slate-900 tracking-tight">
-              Selamat Datang, {user.name}! 👋
+              Selamat Datang, {user.name}
             </h1>
             <p className="text-xs text-slate-500 mt-1">
               Pantau status verifikasi proposal dan kelola kegiatan Anda dengan praktis.

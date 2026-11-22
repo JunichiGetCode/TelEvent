@@ -4,6 +4,8 @@ import { getCurrentUser } from '@/lib/auth';
 import { serializeData } from '@/lib/serialize';
 import { saveUploadedFile } from '@/lib/upload';
 
+export const dynamic = 'force-dynamic';
+
 // GET /api/profile
 export async function GET() {
   try {

@@ -3,16 +3,7 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import {
-  Shield,
-  ShieldCheck,
-  Lock,
-  Mail,
-  ArrowRight,
-  AlertCircle,
-  ArrowLeft,
-  Calendar,
-} from 'lucide-react';
+import { Calendar, Mail, Lock, ArrowRight, AlertCircle, ArrowLeft, Shield } from 'lucide-react';
 
 function AdminLoginForm() {
   const router = useRouter();
@@ -25,7 +16,7 @@ function AdminLoginForm() {
 
   useEffect(() => {
     if (searchParams.get('error') === 'unauthorized') {
-      setError('Akun Anda tidak memiliki hak akses Administrator.');
+      setError('Akses ditolak. Akun Anda tidak memiliki hak akses Administrator.');
     }
   }, [searchParams]);
 
@@ -44,7 +35,7 @@ function AdminLoginForm() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || 'Autentikasi gagal. Silakan periksa kredensial Anda.');
+        setError(data.error || 'Login gagal. Silakan periksa kembali email dan kata sandi Anda.');
         setLoading(false);
         return;
       }
@@ -59,93 +50,99 @@ function AdminLoginForm() {
   };
 
   return (
-    <div className="w-full max-w-md">
-      {/* Brand Header */}
-      <div className="text-center mb-8">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-telu-600/20 border border-telu-500/30 text-telu-500 shadow-glow mb-4">
-          <Shield className="w-8 h-8" />
+    <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
+        <Link href="/" className="inline-flex items-center gap-2 mb-4 group">
+          <div className="w-12 h-12 rounded-2xl bg-telu-600 flex items-center justify-center text-white shadow-glow group-hover:scale-105 transition-transform">
+            <Calendar className="w-6 h-6" />
+          </div>
+        </Link>
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-telu-50 text-telu-700 border border-telu-200/60 mb-3">
+          <Shield className="w-3.5 h-3.5" />
+          Portal Khusus Administrator
         </div>
-        <div className="inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-amber-500/10 text-amber-400 border border-amber-500/20 mb-2">
-          Administrator Command Center
-        </div>
-        <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-          Login Portal Admin
-        </h1>
-        <p className="text-xs text-slate-400 mt-1">
-          Masuk untuk memverifikasi proposal dan mengelola agenda kampus.
+        <h2 className="text-3xl font-black text-slate-900 tracking-tight">
+          Masuk ke Akun Admin
+        </h2>
+        <p className="mt-2 text-xs text-slate-500">
+          Verifikasi proposal kegiatan dan kelola agenda kampus Telkom University.
         </p>
       </div>
 
-      {/* Card */}
-      <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl backdrop-blur-xl">
-        {error && (
-          <div className="mb-6 p-4 rounded-2xl bg-rose-950/60 border border-rose-800/80 flex items-start gap-3 text-rose-300 text-xs font-medium">
-            <AlertCircle className="w-4 h-4 text-rose-400 flex-shrink-0 mt-0.5" />
-            <span>{error}</span>
-          </div>
-        )}
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md px-4">
+        <div className="bg-white py-8 px-6 sm:px-10 rounded-3xl shadow-sm border border-slate-200/80">
+          {error && (
+            <div className="mb-6 p-4 rounded-2xl bg-rose-50 border border-rose-200/60 flex items-start gap-3 text-rose-700 text-xs font-medium">
+              <AlertCircle className="w-4 h-4 text-rose-500 flex-shrink-0 mt-0.5" />
+              <span>{error}</span>
+            </div>
+          )}
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
-              Email Administrator
-            </label>
-            <div className="relative">
-              <Mail className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@telkomuniversity.ac.id"
-                className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-telu-500 transition-all"
-              />
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                Alamat Email Administrator
+              </label>
+              <div className="relative">
+                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="admin@telkomuniversity.ac.id"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-telu-500 transition-all placeholder-slate-400"
+                />
+              </div>
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                  Kata Sandi Admin
+                </label>
+              </div>
+              <div className="relative">
+                <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-telu-500 transition-all placeholder-slate-400"
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-3.5 px-4 rounded-xl text-xs font-bold bg-telu-600 hover:bg-telu-700 text-white shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-60 cursor-pointer"
+            >
+              {loading ? 'Memverifikasi...' : 'Masuk sebagai Admin'}
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </form>
+
+          <div className="mt-8 pt-6 border-t border-slate-100 flex flex-col gap-2.5 text-center text-xs text-slate-500">
+            <div>
+              Bukan pengelola / administrator?{' '}
+              <Link href="/login" className="font-bold text-telu-600 hover:text-telu-700">
+                Masuk ke Portal Panitia / Mahasiswa
+              </Link>
+            </div>
+            <div className="pt-2.5 border-t border-slate-100">
+              <Link
+                href="/"
+                className="inline-flex items-center justify-center gap-1.5 font-semibold text-slate-500 hover:text-slate-800 transition-colors"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" />
+                Kembali ke Beranda Utama
+              </Link>
             </div>
           </div>
-
-          <div>
-            <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
-              Kata Sandi Admin
-            </label>
-            <div className="relative">
-              <Lock className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-telu-500 transition-all"
-              />
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3.5 px-4 rounded-xl text-xs font-bold bg-telu-600 hover:bg-telu-500 text-white shadow-glow transition-all flex items-center justify-center gap-2 disabled:opacity-60 cursor-pointer"
-          >
-            {loading ? 'Mengautentikasi...' : 'Masuk ke Dashboard Admin'}
-            <ArrowRight className="w-4 h-4" />
-          </button>
-        </form>
-
-        <div className="mt-8 pt-6 border-t border-slate-800 text-center text-xs text-slate-500">
-          Bukan administrator?{' '}
-          <Link href="/login" className="font-bold text-telu-400 hover:text-telu-300 transition-colors">
-            Login ke Portal Mahasiswa / Panitia
-          </Link>
         </div>
-      </div>
-
-      <div className="mt-6 text-center">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-slate-300 transition-colors"
-        >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          Kembali ke Beranda Utama
-        </Link>
       </div>
     </div>
   );
@@ -153,10 +150,14 @@ function AdminLoginForm() {
 
 export default function AdminLoginPage() {
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4 sm:p-6">
-      <Suspense fallback={<div className="text-white text-xs">Memuat portal admin...</div>}>
-        <AdminLoginForm />
-      </Suspense>
-    </div>
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+          <p className="text-xs font-bold text-slate-400">Memuat formulir login admin...</p>
+        </div>
+      }
+    >
+      <AdminLoginForm />
+    </Suspense>
   );
 }

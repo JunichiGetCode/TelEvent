@@ -2,13 +2,16 @@ import React from 'react';
 import Link from 'next/link';
 import {
   Calendar,
-  Sparkles,
   Search,
   ArrowRight,
   ShieldCheck,
   FileCheck,
   Users,
-  TrendingUp,
+  BookOpen,
+  MonitorPlay,
+  Trophy,
+  Music,
+  Building2,
   Tag,
   CheckCircle2,
 } from 'lucide-react';
@@ -57,11 +60,11 @@ export default async function HomePage() {
   const stats = await getEventStats();
 
   const categories = [
-    { name: 'Seminar', icon: '📚', count: 'Workshop & Edukasi' },
-    { name: 'Webinar', icon: '💻', count: 'Online Sessions' },
-    { name: 'Lomba', icon: '🏆', count: 'Kompetisi Nasional' },
-    { name: 'Festival', icon: '🎪', count: 'Konser & Pesta Rakyat' },
-    { name: 'Exhibition', icon: '🏛', count: 'Pameran Karya' },
+    { name: 'Seminar', icon: BookOpen, count: 'Workshop & Edukasi' },
+    { name: 'Webinar', icon: MonitorPlay, count: 'Sesi Online' },
+    { name: 'Lomba', icon: Trophy, count: 'Kompetisi Mahasiswa' },
+    { name: 'Festival', icon: Music, count: 'Seni & Kebudayaan' },
+    { name: 'Exhibition', icon: Building2, count: 'Pameran Karya' },
   ];
 
   return (
@@ -76,7 +79,7 @@ export default async function HomePage() {
           <div className="max-w-3xl">
             {/* Tagline Badge */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold tracking-wide uppercase text-amber-300 mb-6 shadow-sm">
-              <Sparkles className="w-3.5 h-3.5" />
+              <Calendar className="w-3.5 h-3.5" />
               Sistem Manajemen Acara Kampus Modern
             </div>
 
@@ -210,19 +213,24 @@ export default async function HomePage() {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-            {categories.map((cat) => (
-              <Link
-                key={cat.name}
-                href={`/events?type=${cat.name}`}
-                className="p-5 rounded-2xl bg-white border border-slate-200/70 hover:border-telu-500 hover:shadow-lg transition-all group flex flex-col items-center text-center"
-              >
-                <span className="text-3xl mb-3 group-hover:scale-110 transition-transform">{cat.icon}</span>
-                <span className="font-bold text-slate-900 text-sm group-hover:text-telu-600 transition-colors">
-                  {cat.name}
-                </span>
-                <span className="text-[11px] text-slate-400 mt-1 font-medium">{cat.count}</span>
-              </Link>
-            ))}
+            {categories.map((cat) => {
+              const Icon = cat.icon;
+              return (
+                <Link
+                  key={cat.name}
+                  href={`/events?type=${cat.name}`}
+                  className="p-5 rounded-2xl bg-white border border-slate-200/70 hover:border-telu-500 hover:shadow-lg transition-all group flex flex-col items-center text-center"
+                >
+                  <div className="w-12 h-12 rounded-xl bg-slate-50 text-slate-700 group-hover:bg-telu-50 group-hover:text-telu-600 flex items-center justify-center mb-3 transition-colors">
+                    <Icon className="w-6 h-6 stroke-[1.75]" />
+                  </div>
+                  <span className="font-bold text-slate-900 text-sm group-hover:text-telu-600 transition-colors">
+                    {cat.name}
+                  </span>
+                  <span className="text-[11px] text-slate-400 mt-1 font-medium">{cat.count}</span>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>

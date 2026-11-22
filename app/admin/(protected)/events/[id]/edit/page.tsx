@@ -133,9 +133,9 @@ export default function AdminEditEventPage({ params }: { params: { id: string } 
               onChange={(e) => setStatus(e.target.value)}
               className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white focus:outline-none focus:ring-2 focus:ring-telu-500 cursor-pointer"
             >
-              <option value="pending">⏳ Menunggu Review (Pending)</option>
-              <option value="approved">✅ Disetujui (Approved)</option>
-              <option value="rejected">❌ Ditolak (Rejected)</option>
+              <option value="pending">Menunggu Review (Pending)</option>
+              <option value="approved">Disetujui (Approved)</option>
+              <option value="rejected">Ditolak (Rejected)</option>
             </select>
           </div>
 

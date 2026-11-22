@@ -152,11 +152,11 @@ export default function CreateEventPage() {
                   onChange={(e) => setType(e.target.value)}
                   className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-telu-500 bg-white cursor-pointer"
                 >
-                  <option value="Seminar">📚 Seminar</option>
-                  <option value="Webinar">💻 Webinar</option>
-                  <option value="Lomba">🏆 Lomba</option>
-                  <option value="Festival">🎪 Festival</option>
-                  <option value="Exhibition">🏛 Exhibition</option>
+                  <option value="Seminar">Seminar</option>
+                  <option value="Webinar">Webinar</option>
+                  <option value="Lomba">Lomba</option>
+                  <option value="Festival">Festival</option>
+                  <option value="Exhibition">Exhibition</option>
                 </select>
               </div>
 
