@@ -46,6 +46,11 @@ export default function Footer() {
                   Tentang Platform
                 </Link>
               </li>
+              <li>
+                <Link href="/admin/login" className="hover:text-amber-400 transition-colors font-medium">
+                  Portal Admin
+                </Link>
+              </li>
             </ul>
           </div>
 

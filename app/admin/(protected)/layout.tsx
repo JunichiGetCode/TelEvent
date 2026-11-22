@@ -11,11 +11,11 @@ export default async function AdminLayout({
   const user = await getCurrentUser();
 
   if (!user) {
-    redirect('/login');
+    redirect('/admin/login');
   }
 
   if (user.role !== 'admin') {
-    redirect('/');
+    redirect('/admin/login?error=unauthorized');
   }
 
   return (

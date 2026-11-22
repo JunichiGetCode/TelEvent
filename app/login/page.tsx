@@ -118,11 +118,21 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <div className="mt-8 pt-6 border-t border-slate-100 text-center text-xs text-slate-500">
-            Belum memiliki akun kepanitiaan?{' '}
-            <Link href="/register" className="font-bold text-telu-600 hover:text-telu-700">
-              Daftar di sini
-            </Link>
+          <div className="mt-8 pt-6 border-t border-slate-100 flex flex-col gap-2.5 text-center text-xs text-slate-500">
+            <div>
+              Belum memiliki akun kepanitiaan?{' '}
+              <Link href="/register" className="font-bold text-telu-600 hover:text-telu-700">
+                Daftar di sini
+              </Link>
+            </div>
+            <div className="pt-2.5 border-t border-slate-100">
+              <Link
+                href="/admin/login"
+                className="inline-flex items-center gap-1 font-bold text-slate-600 hover:text-telu-600 transition-colors"
+              >
+                Masuk ke Portal Administrator Kampus →
+              </Link>
+            </div>
           </div>
         </div>
       </div>
