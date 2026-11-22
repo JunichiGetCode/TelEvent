@@ -1,0 +1,83 @@
+import { NextResponse } from 'next/server';
+import prisma from '@/lib/prisma';
+import { getCurrentUser } from '@/lib/auth';
+import { serializeData } from '@/lib/serialize';
+import { saveUploadedFile } from '@/lib/upload';
+
+// GET /api/profile
+export async function GET() {
+  try {
+    const currentUser = await getCurrentUser();
+    if (!currentUser) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const events = await prisma.event.findMany({
+      where: { user_id: BigInt(currentUser.id) },
+      orderBy: { created_at: 'desc' },
+    });
+
+    const pending = events.filter((e) => e.status === 'pending').length;
+    const approved = events.filter((e) => e.status === 'approved').length;
+    const rejected = events.filter((e) => e.status === 'rejected').length;
+
+    return NextResponse.json({
+      user: currentUser,
+      events: serializeData(events),
+      stats: {
+        total: events.length,
+        pending,
+        approved,
+        rejected,
+      },
+    });
+  } catch (error: any) {
+    console.error('Error getting profile:', error);
+    return NextResponse.json(
+      { error: error?.message || 'Gagal memuat profil.' },
+      { status: 500 }
+    );
+  }
+}
+
+// PUT /api/profile
+export async function PUT(req: Request) {
+  try {
+    const currentUser = await getCurrentUser();
+    if (!currentUser) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const formData = await req.formData();
+    const name = formData.get('name') as string;
+    const email = formData.get('email') as string;
+    const phone = formData.get('phone') as string;
+    const avatarFile = formData.get('avatar') as File | null;
+
+    const dataToUpdate: any = {};
+    if (name) dataToUpdate.name = name.trim();
+    if (email) dataToUpdate.email = email.trim().toLowerCase();
+    if (phone !== undefined) dataToUpdate.phone = phone ? phone.trim() : null;
+
+    if (avatarFile && avatarFile.size > 0) {
+      dataToUpdate.avatar = await saveUploadedFile(avatarFile, 'profile');
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { id: BigInt(currentUser.id) },
+      data: dataToUpdate,
+    });
+
+    return NextResponse.json({
+      success: true,
+      message: 'Profil berhasil diperbarui.',
+      user: serializeData(updatedUser),
+    });
+  } catch (error: any) {
+    console.error('Error updating profile:', error);
+    return NextResponse.json(
+      { error: error?.message || 'Gagal memperbarui profil.' },
+      { status: 500 }
+    );
+  }
+}

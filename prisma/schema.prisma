@@ -1,0 +1,60 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  name              String    @db.VarChar(255)
+  email             String    @unique @db.VarChar(255)
+  email_verified_at DateTime? @db.Timestamp(0)
+  password          String    @db.VarChar(255)
+  role              String    @default("panitia") @db.VarChar(50)
+  phone             String?   @db.VarChar(20)
+  avatar            String?   @db.VarChar(255)
+  remember_token    String?   @db.VarChar(100)
+  created_at        DateTime? @default(now()) @db.Timestamp(0)
+  updated_at        DateTime? @updatedAt @db.Timestamp(0)
+
+  events            Event[]
+
+  @@map("users")
+}
+
+model Event {
+  id         BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  user_id    BigInt    @db.UnsignedBigInt
+  type       String    @db.VarChar(100)
+  title      String    @db.VarChar(255)
+  start_date DateTime? @db.Date
+  end_date   DateTime? @db.Date
+  proposal   String    @db.VarChar(255)
+  poster     String?   @db.VarChar(255)
+  timeline   String    @db.VarChar(255)
+  budgeting  String    @db.VarChar(255)
+  other_data String?   @db.VarChar(255)
+  status     String    @default("pending") @db.VarChar(50)
+  created_at DateTime? @default(now()) @db.Timestamp(0)
+  updated_at DateTime? @updatedAt @db.Timestamp(0)
+
+  user       User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id], map: "events_user_id_foreign")
+  @@map("events")
+}
+
+model Document {
+  id         BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  event_id   BigInt    @db.UnsignedBigInt
+  type       String    @db.VarChar(100)
+  file_path  String    @db.VarChar(255)
+  new_column String?   @db.VarChar(255)
+  created_at DateTime? @default(now()) @db.Timestamp(0)
+  updated_at DateTime? @updatedAt @db.Timestamp(0)
+
+  @@map("documents")
+}

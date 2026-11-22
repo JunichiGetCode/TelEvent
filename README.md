@@ -1,161 +1,77 @@
-<div align="center">
+# 🚀 TelEVent - Platform Manajemen Acara Telkom University (Next.js Edition)
 
-# 🎉 TELEVENT
-### Event Management System — Built with Laravel
-
-![Laravel](https://img.shields.io/badge/Laravel-11.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
-![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=for-the-badge&logo=php&logoColor=white)
-![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
-
-A web platform for submitting and managing campus or organizational events with an admin approval system.
-
-</div>
+Proyek ini merupakan hasil migrasi penuh dari **Laravel 11** ke **Next.js 14 (App Router) + React + TypeScript + Tailwind CSS**.
 
 ---
 
-## 📌 About
-
-**TELEVENT** is a web-based event management application that allows users to submit event proposals online. Admins then review each submission and decide whether to approve or reject it. Approved events are displayed publicly on the main page.
-
-This project was built to digitize the event proposal process that is typically handled manually.
-
----
-
-## ✨ Features
-
-| Feature | Description |
-|---|---|
-| 🔐 **Authentication** | User registration & login with validation |
-| 📝 **Event Submission** | Submit events along with supporting documents |
-| 📁 **File Uploads** | Upload proposal, timeline, budgeting, and poster files |
-| ✅ **Approval System** | Admin can approve or reject event proposals |
-| 👤 **User Profile** | Manage personal info and view event history |
-| 🔍 **Event Search** | Search through all approved events |
-| 🛡️ **Admin Dashboard** | Manage all events and users from one place |
-
-### Supported Event Types
-`Exhibition` · `Festival` · `Competition` · `Seminar` · `Webinar`
+## ✨ Fitur & Peningkatan Baru
+- **⚡ Fullstack Next.js (App Router):** Performa tinggi dengan Server Components dan Client Components yang terisolasi.
+- **🎨 Desain Modern & Responsif:**
+  - Menggunakan **Tailwind CSS** dengan palet warna resmi Telkom University (*Telkom Red `#C60C30`*).
+  - Ikon modern menggunakan **Lucide React**.
+  - Tampilan card acara dengan badge status, preview poster, dan transisi halus.
+  - Sidebar gelap elegan untuk panel administrasi (`/admin`).
+- **🗄️ Database & Prisma ORM:**
+  - Terhubung langsung ke database MySQL Laragon (`TELEVENT`).
+  - Menggunakan tabel yang sama: `users`, `events`, `documents`.
+  - Kompatibel 100% dengan hash password Laravel (`bcrypt`).
+- **🔐 Autentikasi JWT & Role Protection:**
+  - Login & Register dengan verifikasi HTTP-only cookie.
+  - Hak akses peran: **Admin** dan **Panitia**.
+- **📁 Manajemen Berkas & Dokumen:**
+  - Mendukung berkas warisan dari Laravel (`storage/app/public/...`) serta unggahan berkas baru Next.js.
+  - Pengunggahan Proposal, Timeline Kegiatan, Rencana Anggaran Biaya (RAB), dan Poster.
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ Panduan Menjalankan
 
-- **Backend:** Laravel 11, PHP 8.2+
-- **Database:** MySQL
-- **Frontend:** Blade Template Engine, Bootstrap
-- **Storage:** Laravel File Storage (local disk)
-- **Auth:** Laravel Built-in Authentication
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-- PHP >= 8.2
-- Composer
-- Node.js & NPM
-
-### Installation
-
+### 1. Masuk ke Folder Next.js
 ```bash
-# 1. Clone the repository
-git clone https://github.com/username/televent.git
-cd televent
-
-# 2. Install PHP dependencies
-composer install
-
-# 3. Copy the environment file
-cp .env.example .env
-
-# 4. Generate application key
-php artisan key:generate
-
-# 5. Run migrations and seeders
-php artisan migrate --seed
-
-# 6. Create storage symlink
-php artisan storage:link
-
-# 7. Start the development server
-php artisan serve
+cd televent-next
 ```
 
-Open your browser and go to: **http://localhost:8000**
+### 2. Pastikan Laragon MySQL Berjalan
+Pastikan MySQL di Laragon aktif di port `3307` (atau sesuaikan di `.env` jika menggunakan port `3306`).
 
----
-
-## 👥 Default Accounts (After Seeding)
-
-| Role | Email | Password |
-|---|---|---|
-| Admin | admin@televent.com | password |
-
-> Regular users can sign up through the Register page.
-
----
-
-## 📂 Project Structure
-
-```
-TELEVENT/
-├── app/
-│   ├── Http/Controllers/
-│   │   ├── EventController.php         # Event CRUD & logic
-│   │   ├── AdminDashboardController    # Admin management
-│   │   ├── UserProfileController       # User profile
-│   │   └── Auth/                       # Login & Register
-│   ├── Models/
-│   │   ├── Event.php                   # Event model
-│   │   ├── User.php                    # User model
-│   │   └── Document.php               # Document model
-├── database/
-│   └── migrations/                     # Database schema
-├── resources/views/                    # Blade templates
-└── routes/web.php                      # Application routes
+File `.env`:
+```env
+DATABASE_URL="mysql://root:@127.0.0.1:3307/TELEVENT"
+JWT_SECRET="televent_super_secure_jwt_secret_key_9921_next"
+NEXT_PUBLIC_APP_URL="http://localhost:3000"
 ```
 
+### 3. Jalankan Server Development
+```bash
+npm run dev
+```
+Buka browser di **[http://localhost:3000](http://localhost:3000)**.
+
 ---
 
-## 🔄 Workflow
-
-```
-User Register / Login
-        ↓
-Submit Event + Upload Documents
-        ↓
-Status: PENDING (awaiting review)
-        ↓
-Admin Reviews Proposal
-        ↓
-   ┌──────────────┐
-APPROVED        REJECTED
-   ↓
-Visible on Public Event Page
+## 👥 Akun Bawaan (Jika menggunakan Seed)
+Jika Anda ingin menambahkan akun uji coba baru:
+```bash
+npx tsx prisma/seed.ts
 ```
 
----
+| Peran | Email | Kata Sandi |
+| :--- | :--- | :--- |
+| **Admin** | `admin@telkomuniversity.ac.id` | `password123` |
+| **Panitia** | `panitia@telkomuniversity.ac.id` | `password123` |
 
-## 📸 Screenshots
-
-> <img width="833" height="489" alt="image" src="https://github.com/user-attachments/assets/72942e91-11f5-4224-bfd2-75d2070640d5" />
-
-
----
-
-## 🤝 Contributing
-
-Pull requests are welcome! For major changes, please open an issue first to discuss what you'd like to change.
+*(Catatan: Akun-akun lama yang sudah terdaftar di database MySQL Laravel Anda tetap bisa langsung login dengan email dan password aslinya!)*
 
 ---
 
-## 📄 License
-
-This project is licensed under the [MIT License](LICENSE).
-
----
-
-<div align="center">
-  Built with ❤️ using Laravel
-</div>
+## 🗺️ Peta Halaman (Routes)
+- `/` : Halaman Beranda (Landing page modern dengan statistik, pencarian cepat, dan daftar acara pilihan).
+- `/events` : Katalog seluruh kegiatan kampus dengan filter kategori dan kata kunci.
+- `/events/[id]` : Rincian lengkap acara, unduh dokumen proposal/RAB/timeline, serta panel verifikasi cepat untuk Admin.
+- `/events/create` : Formulir pengajuan proposal kegiatan baru beserta unggah berkas.
+- `/about` : Halaman informasi dan panduan alur pengajuan acara.
+- `/login` & `/register` : Autentikasi pengguna.
+- `/home` : Dashboard panitia untuk memantau proposal miliknya.
+- `/profile` & `/profile/edit` : Manajemen profil, kontak, dan riwayat proposal.
+- `/admin/dashboard` : Dashboard admin berisi metrik KPI dan antrean verifikasi proposal.
+- `/admin/events` : Manajemen dan aksi verifikasi (Setujui / Tolak / Edit / Hapus).
