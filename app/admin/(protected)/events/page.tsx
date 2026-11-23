@@ -13,6 +13,7 @@ import prisma from '@/lib/prisma';
 import { serializeData } from '@/lib/serialize';
 import StatusBadge from '@/components/StatusBadge';
 import AdminRowActions from './AdminRowActions';
+import { getMockEvents } from '@/lib/mockData';
 
 export const dynamic = 'force-dynamic';
 
@@ -58,8 +59,8 @@ async function getAdminEvents(q?: string, status?: string, type?: string) {
 
     return serializeData(events);
   } catch (err) {
-    console.error(err);
-    return [];
+    // Preview fallback
+    return getMockEvents({ q, status, type });
   }
 }
 

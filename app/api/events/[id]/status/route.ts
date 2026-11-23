@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/auth';
 import { serializeData } from '@/lib/serialize';
+import { updateMockEventStatus } from '@/lib/mockData';
+
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request, { params }: { params: { id: string } }) {
   try {
@@ -19,17 +22,32 @@ export async function POST(req: Request, { params }: { params: { id: string } })
       return NextResponse.json({ error: 'Status tidak valid.' }, { status: 400 });
     }
 
-    const id = BigInt(params.id);
-    const updated = await prisma.event.update({
-      where: { id },
-      data: { status },
-    });
+    const numId = Number(params.id);
 
-    return NextResponse.json({
-      success: true,
-      message: `Status proposal berhasil diubah menjadi "${status}".`,
-      event: serializeData(updated),
-    });
+    try {
+      const id = BigInt(params.id);
+      const updated = await prisma.event.update({
+        where: { id },
+        data: { status },
+      });
+
+      return NextResponse.json({
+        success: true,
+        message: `Status proposal berhasil diubah menjadi "${status}".`,
+        event: serializeData(updated),
+      });
+    } catch (dbError) {
+      console.warn('DB update failed, updating mock event status:', dbError);
+      const mockUpdated = updateMockEventStatus(numId, status as any);
+      if (mockUpdated) {
+        return NextResponse.json({
+          success: true,
+          message: `Status proposal berhasil diubah menjadi "${status}" (Mode Preview).`,
+          event: mockUpdated,
+        });
+      }
+      return NextResponse.json({ error: 'Event tidak ditemukan.' }, { status: 404 });
+    }
   } catch (error: any) {
     console.error('Error changing event status:', error);
     return NextResponse.json(

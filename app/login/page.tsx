@@ -64,6 +64,24 @@ export default function LoginPage() {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md px-4">
         <div className="bg-white py-8 px-6 sm:px-10 rounded-3xl shadow-sm border border-slate-200/80">
+          {/* Demo Account Quick Fill */}
+          <div className="mb-6 p-3.5 rounded-2xl bg-amber-50/70 border border-amber-200/80 text-xs text-amber-900 flex items-center justify-between gap-3">
+            <div>
+              <p className="font-bold text-[11px] text-amber-800 uppercase tracking-wider">Akun Demo Panitia</p>
+              <p className="text-[11px] text-amber-700">panitia@telkomuniversity.ac.id</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setEmail('panitia@telkomuniversity.ac.id');
+                setPassword('password');
+              }}
+              className="px-2.5 py-1 rounded-lg bg-amber-200 hover:bg-amber-300 text-amber-900 text-[10px] font-bold transition-colors cursor-pointer"
+            >
+              Isi Otomatis
+            </button>
+          </div>
+
           {error && (
             <div className="mb-6 p-4 rounded-2xl bg-rose-50 border border-rose-200/60 flex items-start gap-3 text-rose-700 text-xs font-medium">
               <AlertCircle className="w-4 h-4 text-rose-500 flex-shrink-0 mt-0.5" />

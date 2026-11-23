@@ -3,6 +3,9 @@ import prisma from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/auth';
 import { serializeData } from '@/lib/serialize';
 import { saveUploadedFile } from '@/lib/upload';
+import { getMockEvents, addMockEvent } from '@/lib/mockData';
+
+export const dynamic = 'force-dynamic';
 
 // GET /api/events
 export async function GET(req: Request) {
@@ -25,10 +28,8 @@ export async function GET(req: Request) {
       }
       where.user_id = BigInt(currentUser.id);
     } else if (status) {
-      // Filter by specific status (e.g. pending, approved, rejected)
       where.status = status;
     } else {
-      // Default public catalog only shows approved events
       where.status = 'approved';
     }
 
@@ -42,24 +43,36 @@ export async function GET(req: Request) {
       };
     }
 
-    const events = await prisma.event.findMany({
-      where,
-      orderBy: { created_at: 'desc' },
-      take: limit,
-      include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            avatar: true,
-            role: true,
+    try {
+      const events = await prisma.event.findMany({
+        where,
+        orderBy: { created_at: 'desc' },
+        take: limit,
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              avatar: true,
+              role: true,
+            },
           },
         },
-      },
-    });
+      });
 
-    return NextResponse.json({ events: serializeData(events) });
+      return NextResponse.json({ events: serializeData(events) });
+    } catch (dbError) {
+      console.warn('DB query failed, returning mock events for preview:', dbError);
+      const mockResult = getMockEvents({
+        status: myEvents === 'true' ? undefined : (status || 'approved'),
+        type: type || undefined,
+        q: q || undefined,
+        userId: myEvents === 'true' ? currentUser?.id : undefined,
+        limit,
+      });
+      return NextResponse.json({ events: mockResult });
+    }
   } catch (error: any) {
     console.error('Error fetching events:', error);
     return NextResponse.json(
@@ -110,7 +123,7 @@ export async function POST(req: Request) {
     const proposalPath = await saveUploadedFile(proposalFile, 'proposals');
     const timelinePath = await saveUploadedFile(timelineFile, 'timelines');
     const budgetingPath = await saveUploadedFile(budgetingFile, 'budgeting');
-    
+
     let posterPath: string | null = null;
     if (posterFile && posterFile.size > 0) {
       posterPath = await saveUploadedFile(posterFile, 'posters');
@@ -121,27 +134,50 @@ export async function POST(req: Request) {
       otherDataPath = await saveUploadedFile(otherDataFile, 'other_data');
     }
 
-    const newEvent = await prisma.event.create({
-      data: {
-        user_id: BigInt(currentUser.id),
+    try {
+      const newEvent = await prisma.event.create({
+        data: {
+          user_id: BigInt(currentUser.id),
+          title: title.trim(),
+          type: type.trim(),
+          start_date: start_date ? new Date(start_date) : null,
+          end_date: end_date ? new Date(end_date) : null,
+          proposal: proposalPath,
+          timeline: timelinePath,
+          budgeting: budgetingPath,
+          poster: posterPath,
+          other_data: otherDataPath,
+          status: 'pending',
+        },
+      });
+
+      return NextResponse.json({
+        success: true,
+        message: 'Event berhasil diajukan! Menunggu review admin.',
+        event: serializeData(newEvent),
+      });
+    } catch (dbError) {
+      console.warn('DB insert failed, saving to mock store for preview:', dbError);
+      const mockEvent = addMockEvent({
+        user_id: Number(currentUser.id),
         title: title.trim(),
         type: type.trim(),
-        start_date: start_date ? new Date(start_date) : null,
-        end_date: end_date ? new Date(end_date) : null,
+        start_date,
+        end_date,
         proposal: proposalPath,
         timeline: timelinePath,
         budgeting: budgetingPath,
-        poster: posterPath,
+        poster: posterPath || undefined,
         other_data: otherDataPath,
         status: 'pending',
-      },
-    });
+      });
 
-    return NextResponse.json({
-      success: true,
-      message: 'Event berhasil diajukan! Menunggu review admin.',
-      event: serializeData(newEvent),
-    });
+      return NextResponse.json({
+        success: true,
+        message: 'Event berhasil diajukan (Mode Preview)! Menunggu review admin.',
+        event: mockEvent,
+      });
+    }
   } catch (error: any) {
     console.error('Error creating event:', error);
     return NextResponse.json(

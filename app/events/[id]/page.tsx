@@ -21,6 +21,9 @@ import { serializeData } from '@/lib/serialize';
 import { getCurrentUser } from '@/lib/auth';
 import StatusBadge from '@/components/StatusBadge';
 import AdminStatusButtons from './AdminStatusButtons';
+import { getMockEventById } from '@/lib/mockData';
+
+export const dynamic = 'force-dynamic';
 
 interface EventDetailPageProps {
   params: { id: string };
@@ -44,12 +47,13 @@ async function getEvent(id: string) {
       },
     });
 
-    if (!event) return null;
-    return serializeData(event);
+    if (event) return serializeData(event);
   } catch (e) {
-    console.error('Error fetching event detail:', e);
-    return null;
+    // Fall back to mock store for preview
   }
+
+  // Fallback to mock
+  return getMockEventById(Number(id));
 }
 
 export default async function EventDetailPage({ params }: EventDetailPageProps) {

@@ -71,6 +71,24 @@ function AdminLoginForm() {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md px-4">
         <div className="bg-white py-8 px-6 sm:px-10 rounded-3xl shadow-sm border border-slate-200/80">
+          {/* Demo Admin Quick Fill */}
+          <div className="mb-6 p-3.5 rounded-2xl bg-telu-50/70 border border-telu-200/80 text-xs text-telu-900 flex items-center justify-between gap-3">
+            <div>
+              <p className="font-bold text-[11px] text-telu-800 uppercase tracking-wider">Akun Demo Admin</p>
+              <p className="text-[11px] text-telu-700">admin@telkomuniversity.ac.id</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setEmail('admin@telkomuniversity.ac.id');
+                setPassword('admin123');
+              }}
+              className="px-2.5 py-1 rounded-lg bg-telu-200 hover:bg-telu-300 text-telu-900 text-[10px] font-bold transition-colors cursor-pointer"
+            >
+              Isi Otomatis
+            </button>
+          </div>
+
           {error && (
             <div className="mb-6 p-4 rounded-2xl bg-rose-50 border border-rose-200/60 flex items-start gap-3 text-rose-700 text-xs font-medium">
               <AlertCircle className="w-4 h-4 text-rose-500 flex-shrink-0 mt-0.5" />

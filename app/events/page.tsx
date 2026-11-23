@@ -4,6 +4,7 @@ import { Search, Filter, Tag, Calendar, PlusCircle } from 'lucide-react';
 import prisma from '@/lib/prisma';
 import { serializeData } from '@/lib/serialize';
 import EventCard from '@/components/EventCard';
+import { getMockEvents } from '@/lib/mockData';
 
 export const dynamic = 'force-dynamic';
 
@@ -45,8 +46,8 @@ async function getEvents(q?: string, type?: string) {
 
     return serializeData(events);
   } catch (error) {
-    console.error('Error fetching events catalog:', error);
-    return [];
+    // Fallback to mock events for preview deployment
+    return getMockEvents({ q, type, status: 'approved' });
   }
 }
 

@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import { cookies } from 'next/headers';
 import prisma from './prisma';
 import { serializeData } from './serialize';
+import { getMockUserById, getMockUserByEmail } from './mockData';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'televent_default_secret_key_change_in_production';
 const COOKIE_NAME = 'televent_token';
@@ -67,16 +68,42 @@ export async function getCurrentUser() {
       },
     });
 
-    if (!user) return null;
-    const serialized = serializeData(user);
-    if (serialized.email?.toLowerCase() === 'admin@login.com') {
-      serialized.role = 'admin';
+    if (user) {
+      const serialized = serializeData(user);
+      if (serialized.email?.toLowerCase() === 'admin@login.com') {
+        serialized.role = 'admin';
+      }
+      return serialized;
     }
-    return serialized;
   } catch (error) {
-    console.error('Error fetching current user:', error);
-    return null;
+    // If DB is unreachable (e.g. preview deployment on Vercel without MySQL), fall back to mock
   }
+
+  // Fallback to mock user
+  const mockUser = getMockUserById(payload.userId) || getMockUserByEmail(payload.email);
+  if (mockUser) {
+    return {
+      id: mockUser.id,
+      name: mockUser.name,
+      email: mockUser.email,
+      role: mockUser.role,
+      phone: mockUser.phone,
+      avatar: mockUser.avatar,
+      created_at: mockUser.created_at,
+    };
+  }
+
+  // If payload itself has name/role/email, return as guest fallback
+  if (payload.userId && payload.email) {
+    return {
+      id: payload.userId,
+      name: payload.name || 'Pengguna',
+      email: payload.email,
+      role: payload.role || 'panitia',
+    };
+  }
+
+  return null;
 }
 
 export { COOKIE_NAME };

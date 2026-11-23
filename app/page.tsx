@@ -18,6 +18,7 @@ import {
 import prisma from '@/lib/prisma';
 import { serializeData } from '@/lib/serialize';
 import EventCard from '@/components/EventCard';
+import { getMockEvents } from '@/lib/mockData';
 
 export const dynamic = 'force-dynamic';
 
@@ -38,8 +39,8 @@ async function getFeaturedEvents() {
     });
     return serializeData(events);
   } catch (error) {
-    console.error('Error fetching landing events:', error);
-    return [];
+    // Fallback to mock events for preview deployment
+    return getMockEvents({ status: 'approved', limit: 6 });
   }
 }
 
@@ -51,7 +52,13 @@ async function getEventStats() {
     const totalUsers = await prisma.user.count();
     return { totalEvents, approvedEvents, pendingEvents, totalUsers };
   } catch (e) {
-    return { totalEvents: 12, approvedEvents: 8, pendingEvents: 4, totalUsers: 35 };
+    const all = getMockEvents();
+    return {
+      totalEvents: all.length,
+      approvedEvents: all.filter((ev) => ev.status === 'approved').length,
+      pendingEvents: all.filter((ev) => ev.status === 'pending').length,
+      totalUsers: 35,
+    };
   }
 }
 
