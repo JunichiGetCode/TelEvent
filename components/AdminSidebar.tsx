@@ -44,8 +44,8 @@ export default function AdminSidebar({ user }: { user?: any }) {
       {/* Brand Header */}
       <div className="p-6 border-b border-slate-100">
         <Link href="/admin/dashboard" className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-telu-600 flex items-center justify-center text-white shadow-sm">
-            <Calendar className="w-5 h-5 stroke-[1.75]" />
+          <div className="w-10 h-10 rounded-xl bg-telu-600 flex items-center justify-center p-1 shadow-sm">
+            <img src="/favicon.svg" alt="TelEVent Logo" className="w-8 h-8" />
           </div>
           <div>
             <h2 className="text-base font-black text-slate-900 tracking-tight">

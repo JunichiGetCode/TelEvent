@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 160" width="600" height="160">
+  <defs>
+    <linearGradient id="crimsonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E21B42" />
+      <stop offset="100%" stop-color="#A50826" />
+    </linearGradient>
+    <linearGradient id="glowGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.25" />
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#C60C30" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  <!-- Logo Icon Container -->
+  <g transform="translate(16, 16)">
+    <!-- App icon rounded plate -->
+    <rect x="0" y="0" width="128" height="128" rx="28" fill="url(#crimsonGrad)" filter="url(#shadow)" />
+    <rect x="0" y="0" width="128" height="64" rx="28" fill="url(#glowGrad)" />
+    <!-- Dynamic T & Event Starburst / Ticket motif -->
+    <!-- Ticket / Calendar notch & T shape -->
+    <path d="M36 40 C36 36 39 34 44 34 L84 34 C89 34 92 36 92 40 L92 52 C92 56 89 58 84 58 L72 58 L72 88 C72 93 69 96 64 96 C59 96 56 93 56 88 L56 58 L44 58 C39 58 36 56 36 52 Z" fill="#FFFFFF"/>
+    <!-- Event sparkle / beacon dot in top right -->
+    <circle cx="88" cy="40" r="5" fill="#FFE0E6"/>
+    <!-- Dynamic soundwave / calendar date dots at bottom -->
+    <circle cx="44" cy="80" r="4" fill="#FFFFFF" opacity="0.8"/>
+    <circle cx="84" cy="80" r="4" fill="#FFFFFF" opacity="0.8"/>
+    <path d="M42 98 L86 98" stroke="#FFE0E6" stroke-width="3.5" stroke-linecap="round" opacity="0.9"/>
+  </g>
+  <!-- Wordmark -->
+  <g transform="translate(168, 96)">
+    <text font-family="system-ui, -apple-system, 'Inter', 'SF Pro Display', sans-serif" font-weight="900" font-size="58" letter-spacing="-1.5">
+      <tspan fill="#0F172A">Tel</tspan><tspan fill="#C60C30">EV</tspan><tspan fill="#0F172A">ent</tspan>
+    </text>
+    <text x="2" y="30" font-family="system-ui, -apple-system, 'Inter', 'Segoe UI', sans-serif" font-weight="600" font-size="14" letter-spacing="4" fill="#64748B">
+      TELKOM UNIVERSITY EVENT HUB
+    </text>
+  </g>
+</svg>

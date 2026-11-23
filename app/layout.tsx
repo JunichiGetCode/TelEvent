@@ -8,6 +8,14 @@ export const metadata: Metadata = {
   title: 'TelEVent - Platform Manajemen Acara Telkom University',
   description:
     'Sistem Informasi Manajemen Acara, Pengajuan Proposal Kegiatan, Budgeting, dan Jadwal Acara Telkom University.',
+  icons: {
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/icon.svg', type: 'image/svg+xml' },
+    ],
+    shortcut: '/favicon.svg',
+    apple: '/icon.svg',
+  },
 };
 
 export default function RootLayout({

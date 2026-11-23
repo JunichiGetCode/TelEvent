@@ -62,14 +62,14 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
           {/* Brand Logo */}
           <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-md flex items-center justify-center text-white border border-white/20 shadow-sm group-hover:scale-105 transition-transform">
-              <Calendar className="w-5 h-5 text-white" />
+            <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center p-1 shadow-sm group-hover:scale-105 transition-transform">
+              <img src="/favicon.svg" alt="TelEVent Logo" className="w-8 h-8" />
             </div>
             <div className="flex flex-col">
               <span className="text-xl font-black text-white tracking-tight flex items-center gap-1">
                 Tel<span className="text-amber-300">EVent</span>
               </span>
-              <span className="text-[10px] text-white/70 font-medium tracking-wider -mt-1 uppercase">
+              <span className="text-[10px] text-white/80 font-semibold tracking-wider -mt-1 uppercase">
                 Telkom University
               </span>
             </div>
